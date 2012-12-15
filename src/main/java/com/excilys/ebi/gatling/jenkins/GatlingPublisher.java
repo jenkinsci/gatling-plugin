@@ -51,10 +51,7 @@ public class GatlingPublisher extends Recorder {
 
 	@DataBoundConstructor
 	public GatlingPublisher(Simulation simulation) {
-		if (simulation == null)
-			this.simulation = null;
-		else
-			this.simulation = simulation;
+		this.simulation = simulation;
 	}
 
 	public Simulation getSimulation() {
