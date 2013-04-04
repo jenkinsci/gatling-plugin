@@ -87,7 +87,7 @@ public class GatlingPublisher extends Recorder {
 	}
 
 	private FilePath saveFullReport(FilePath workspace, File rootDir) throws IOException, InterruptedException {
-		FilePath[] files = workspace.list("**/simulation.log");
+		FilePath[] files = workspace.list("**/global_stats.json");
 
 		if(files.length == 0) {
 			throw new IllegalArgumentException("Could not find a Gatling report in results folder.");
@@ -95,7 +95,7 @@ public class GatlingPublisher extends Recorder {
 			throw new IllegalArgumentException("Found more than one Gatling report in results folder, make sure results folder is cleared between two builds.");
 		}
 
-		FilePath parent = files[0].getParent();
+		FilePath parent = files[0].getParent().getParent();
 		String name = parent.getName();
 		File allSimulationsDirectory = new File(rootDir, "simulations");
 		if (!allSimulationsDirectory.exists())
