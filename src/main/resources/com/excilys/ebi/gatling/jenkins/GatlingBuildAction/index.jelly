@@ -1,22 +1,18 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
          xmlns:l="/lib/layout">
-	<l:layout title="Build #${it.build.number} : ${it.simulationName}">
-		<l:breadcrumb title="${it.simulationName}" href="."/>
+	<l:layout title="Build #${it.build.number}">
 		<l:side-panel>
 			<st:include it="${it.build}" page="sidepanel.jelly"/>
 		</l:side-panel>
 		<l:main-panel>
-			<h1>
-				<a href="source" target="_blank">${%OpenNewPage}</a>
-			</h1>
-			<iframe id="reportFrame" src="source" width="100%" height="100%" frameborder="0"
-			        onload="resizeReportFrame()"></iframe>
-			<script type="text/javascript">
-				function resizeReportFrame() {
-					var frame = document.getElementById("reportFrame")
-					frame.height = frame.contentWindow.document.body.scrollHeight + "px"
-				}
-			</script>
+            <h2>${%AvailableReports} :</h2>
+            <ul>
+                <j:forEach items="${it.simulations}" var="sim">
+                    <li>
+                        <a href="../${it.getReportURL(sim.simulationName)}" target="_blank">${sim.simulationName}</a>
+                    </li>
+                </j:forEach>
+            </ul>
 		</l:main-panel>
 	</l:layout>
 </j:jelly>

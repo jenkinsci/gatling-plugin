@@ -22,6 +22,8 @@ import hudson.model.AbstractProject;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import com.excilys.ebi.gatling.jenkins.chart.Graph;
 
@@ -95,19 +97,24 @@ public class GatlingProjectAction implements Action {
 		};
 	}
 
-	public Map<AbstractBuild<?, ?>, String> getReports() {
-		Map<AbstractBuild<?, ?>, String> reports = new LinkedHashMap<AbstractBuild<?, ?>, String>();
+	public Map<AbstractBuild<?, ?>, List<String>> getReports() {
+		Map<AbstractBuild<?, ?>, List<String>> reports = new LinkedHashMap<AbstractBuild<?, ?>, List<String>>();
 
 		for (AbstractBuild<?, ?> build : project.getBuilds()) {
 			GatlingBuildAction action = build.getAction(GatlingBuildAction.class);
-			if (action != null)
-				reports.put(build, action.getSimulationName());
+			if (action != null) {
+                List<String> simNames = new ArrayList<String>();
+                for (BuildSimulation sim : action.getSimulations()) {
+                    simNames.add(sim.getSimulationName());
+                }
+                reports.put(build, simNames);
+            }
 		}
 
 		return reports;
 	}
 
-	public String getReportURL(int build) {
-		return new StringBuilder().append(build).append("/").append(URL_NAME).toString();
+	public String getReportURL(int build, String simName) {
+		return new StringBuilder().append(build).append("/").append(URL_NAME).append("/report/").append(simName).toString();
 	}
 }

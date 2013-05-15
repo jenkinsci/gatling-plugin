@@ -24,9 +24,11 @@
 			<h2>${%AvailableReports} :</h2>
 			<ul>
 				<j:forEach items="${it.reports.entrySet()}" var="build">
-					<li>
-						Build # ${build.key.number} (<fmt:formatDate value="${build.key.time}" type="both"/>) : <a href="../${it.getReportURL(build.key.number)}" target="_blank">${build.value}</a>
-					</li>
+                    <j:forEach items="${build.value}" var="simname">
+                        <li>
+                            Build # ${build.key.number} (<fmt:formatDate value="${build.key.time}" type="both"/>) : <a href="../${it.getReportURL(build.key.number, simname)}" target="_blank">${simname}</a>
+                        </li>
+                    </j:forEach>
 				</j:forEach>
 			</ul>
 		</l:main-panel>

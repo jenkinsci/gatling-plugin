@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.excilys.ebi.gatling.jenkins.GatlingBuildAction;
+import com.excilys.ebi.gatling.jenkins.BuildSimulation;
 import com.excilys.ebi.gatling.jenkins.RequestReport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -43,11 +44,13 @@ public abstract class Graph<Y extends Number> {
 
 			if (action != null) {
 				numberOfBuild++;
-				SerieName name = new SerieName(action.getSimulationName());
-				if (!series.containsKey(name))
-					series.put(name, new Serie<Integer, Y>());
+                for (BuildSimulation sim : action.getSimulations()) {
+				    SerieName name = new SerieName(sim.getSimulationName());
+				    if (!series.containsKey(name))
+					    series.put(name, new Serie<Integer, Y>());
 
-				series.get(name).addPoint(build.getNumber(), getValue(action.getRequestReport()));
+				    series.get(name).addPoint(build.getNumber(), getValue(sim.getRequestReport()));
+                }
 			}
 
 			if (numberOfBuild >= maxBuildsToDisplay)
