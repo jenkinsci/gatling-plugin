@@ -7,9 +7,9 @@
 		</l:side-panel>
 		<l:main-panel>
 			<h1>
-				<a href="${simName}/source" target="_blank">${%OpenNewPage}</a>
+				<a href="source" target="_blank">${%OpenNewPage}</a>
 			</h1>
-			<iframe id="reportFrame" src="${simName}/source" width="100%" height="100%" frameborder="0"
+			<iframe id="reportFrame" src="source" width="100%" height="100%" frameborder="0"
 			        onload="resizeReportFrame()"></iframe>
 			<script type="text/javascript">
 				function resizeReportFrame() {

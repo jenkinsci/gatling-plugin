@@ -18,6 +18,11 @@ package com.excilys.ebi.gatling.jenkins;
 
 import hudson.FilePath;
 
+/**
+ * This class is basically just a struct to hold information about one
+ * or more gatling simulations that were archived for a given
+ * instance of {@link GatlingBuildAction}.
+ */
 public class BuildSimulation {
     private final String simulationName;
     private final RequestReport requestReport;
