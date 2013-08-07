@@ -6,5 +6,19 @@
 			<g:graph id="dashboardGatling" seriesNames="${action.dashboardGraph.seriesNamesJSON}"
 			         data="${action.dashboardGraph.seriesJSON}" yAxisUnit="ms" height="400px" width="500px"/>
 		</div>
+
+        <script>
+            var dashboardSeriesNames = ${action.dashboardGraph.seriesNamesJSON};
+            var dashboardSeriesValues = ${action.dashboardGraph.seriesJSON};
+
+            $$('#dashboardGatling').bind('jqplotDataClick',
+                function (ev, seriesIndex, pointIndex, data) {
+                    var xAxisArray = dashboardSeriesValues[seriesIndex].reverse();
+                    var url = xAxisArray[pointIndex][0] + "/gatling/report/" + dashboardSeriesNames[seriesIndex].label + "/";
+                    var win = window.open(url, '_blank');
+                    win.focus();
+                }
+            );
+        </script>
 	</j:if>
 </j:jelly>
