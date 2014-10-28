@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * 		http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,101 +15,105 @@
  */
 package com.excilys.ebi.gatling.jenkins;
 
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.BuildStepMonitor;
-import hudson.tasks.Publisher;
-import hudson.tasks.Recorder;
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kohsuke.stapler.DataBoundConstructor;
+
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.matrix.MatrixAggregatable;
+import hudson.matrix.MatrixAggregator;
+import hudson.matrix.MatrixBuild;
+import hudson.model.Action;
+import hudson.model.BuildListener;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
+import hudson.tasks.Publisher;
+import hudson.tasks.Recorder;
+
 @SuppressWarnings("unchecked")
-public class GatlingPublisher extends Recorder {
+public class GatlingPublisher extends Recorder implements MatrixAggregatable {
 
-	private final Boolean enabled;
+    private final Boolean enabled;
     private AbstractBuild<?, ?> build;
-	private PrintStream logger;
+    private PrintStream logger;
 
+    @DataBoundConstructor
+    public GatlingPublisher(Boolean enabled) {
+        this.enabled = enabled;
+    }
 
-	@DataBoundConstructor
-	public GatlingPublisher(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	@Override
-	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+    @Override
+    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
+            throws InterruptedException, IOException {
         this.build = build;
-		logger = listener.getLogger();
-		if (enabled == null) {
-			logger.println("Cannot check Gatling simulation tracking status, reports won't be archived.");
-			logger.println("Please make sure simulation tracking is enabled in your build configuration !");
-			return true;
-		}
-		if (!enabled) {
-			logger.println("Simulation tracking disabled, reports were not archived.");
-			return true;
-		}
+        logger = listener.getLogger();
+        if (enabled == null) {
+            logger.println("Cannot check Gatling simulation tracking status, reports won't be archived.");
+            logger.println("Please make sure simulation tracking is enabled in your build configuration !");
+            return true;
+        }
+        if (!enabled) {
+            logger.println("Simulation tracking disabled, reports were not archived.");
+            return true;
+        }
 
-		logger.println("Archiving Gatling reports...");
+        logger.println("Archiving Gatling reports...");
         List<BuildSimulation> sims = saveFullReports(build.getWorkspace(), build.getRootDir());
         if (sims.size() == 0) {
-			logger.println("No newer Gatling reports to archive.");
-			return true;
-		}
+            logger.println("No newer Gatling reports to archive.");
+            return true;
+        }
 
         GatlingBuildAction action = new GatlingBuildAction(build, sims);
 
         build.addAction(action);
 
         return true;
-	}
+    }
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	public BuildStepMonitor getRequiredMonitorService() {
-		return BuildStepMonitor.BUILD;
-	}
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.BUILD;
+    }
 
-	@Override
-	public Action getProjectAction(AbstractProject<?, ?> project) {
-		return new GatlingProjectAction(project);
-	}
+    @Override
+    public Action getProjectAction(AbstractProject<?, ?> project) {
+        return new GatlingProjectAction(project);
+    }
 
-    private List<BuildSimulation> saveFullReports(FilePath workspace, File rootDir) throws IOException, InterruptedException {
-		FilePath[] files = workspace.list("**/global_stats.json");
-		List<FilePath> reportFolders = new ArrayList<FilePath>();
+    private List<BuildSimulation> saveFullReports(FilePath workspace, File rootDir) throws IOException,
+            InterruptedException {
+        FilePath[] files = workspace.list("**/global_stats.json");
+        List<FilePath> reportFolders = new ArrayList<FilePath>();
 
-		if (files.length == 0) {
-			throw new IllegalArgumentException("Could not find a Gatling report in results folder.");
-		}
+        if (files.length == 0) {
+            throw new IllegalArgumentException("Could not find a Gatling report in results folder.");
+        }
 
-		// Get reports folders for all "global_stats.json" found
-		for (FilePath file : files) {
-			reportFolders.add(file.getParent().getParent());
-		}
+        // Get reports folders for all "global_stats.json" found
+        for (FilePath file : files) {
+            reportFolders.add(file.getParent().getParent());
+        }
 
         List<FilePath> reportsToArchive = selectReports(reportFolders);
 
-
         List<BuildSimulation> simsToArchive = new ArrayList<BuildSimulation>();
 
-		// If the most recent report has already been archived, there's nothing else to do
+        // If the most recent report has already been archived, there's nothing else to do
         if (reportsToArchive.size() == 0) {
-			return simsToArchive;
-		}
+            return simsToArchive;
+        }
 
         File allSimulationsDirectory = new File(rootDir, "simulations");
         if (!allSimulationsDirectory.exists())
@@ -133,37 +137,44 @@ public class GatlingPublisher extends Recorder {
             simsToArchive.add(sim);
         }
 
+        return simsToArchive;
+    }
 
-		return simsToArchive;
-	}
-
-	private List<FilePath> selectReports(List<FilePath> reportFolders) throws InterruptedException, IOException {
+    private List<FilePath> selectReports(List<FilePath> reportFolders) throws InterruptedException, IOException {
         long buildStartTime = build.getStartTimeInMillis();
         List<FilePath> reportsFromThisBuild = new ArrayList<FilePath>();
-		for (FilePath reportFolder : reportFolders) {
+        for (FilePath reportFolder : reportFolders) {
             long reportLastMod = reportFolder.lastModified();
             if (reportLastMod > buildStartTime) {
                 logger.println("Adding report '" + reportFolder.getName() + "'");
                 reportsFromThisBuild.add(reportFolder);
             }
-		}
+        }
         return reportsFromThisBuild;
-	}
+    }
 
-	@Extension
-	public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
+    @Extension
+    public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
-		@Override
-		@SuppressWarnings("rawtypes")
-		public boolean isApplicable(Class<? extends AbstractProject> aClass) {
-			return true;
-		}
+        @Override
+        @SuppressWarnings("rawtypes")
+        public boolean isApplicable(Class<? extends AbstractProject> aClass) {
+            return AbstractProject.class.isAssignableFrom(aClass);
+        }
 
-		@Override
-		public String getDisplayName() {
-			return Messages.Title();
-		}
-	}
+        @Override
+        public String getDisplayName() {
+            return Messages.Title();
+        }
+    }
 
+    public MatrixAggregator createAggregator(MatrixBuild build, Launcher launcher, BuildListener listener) {
+        return new MatrixAggregator(build, launcher, listener) {
+            @Override
+            public boolean endBuild() throws InterruptedException, IOException {
+                return perform(build, launcher, listener);
+            }
+        };
+    }
 
 }
