@@ -36,7 +36,7 @@
                 var meanResponseSeriesNames = ${it.meanResponseTimeGraph.seriesNamesJSON};
                 var meanResponseSeriesValues = ${it.meanResponseTimeGraph.seriesJSON};
 
-                $$('#meanResponseTime').bind('jqplotDataClick',
+                jQuery('#meanResponseTime').bind('jqplotDataClick',
                     function (ev, seriesIndex, pointIndex, data) {
                         var xAxisArray = meanResponseSeriesValues[seriesIndex].reverse();
                         var url = "../" + xAxisArray[pointIndex][0] + "/gatling/report/" + meanResponseSeriesNames[seriesIndex].label + "/";
@@ -48,7 +48,7 @@
                 var responseTimeSeriesNames = ${it.percentileResponseTimeGraph.seriesNamesJSON};
                 var responseTimeSeriesValues = ${it.percentileResponseTimeGraph.seriesJSON};
 
-                $$('#responseTimePercentile').bind('jqplotDataClick',
+                jQuery('#responseTimePercentile').bind('jqplotDataClick',
                     function (ev, seriesIndex, pointIndex, data) {
                         var xAxisArray = responseTimeSeriesValues[seriesIndex].reverse();
                         var url = "../" + xAxisArray[pointIndex][0] + "/gatling/report/" + responseTimeSeriesNames[seriesIndex].label + "/";
@@ -60,7 +60,7 @@
                 var requestKOSeriesNames = ${it.requestKOPercentageGraph.seriesNamesJSON};
                 var requestKOSeriesValues = ${it.requestKOPercentageGraph.seriesJSON};
 
-                $$('#requestKO').bind('jqplotDataClick',
+                jQuery('#requestKO').bind('jqplotDataClick',
                     function (ev, seriesIndex, pointIndex, data) {
                         var xAxisArray = responseTimeSeriesValues[seriesIndex].reverse();
                         var url = "../" + xAxisArray[pointIndex][0] + "/gatling/report/" + requestKOSeriesNames[seriesIndex].label + "/";

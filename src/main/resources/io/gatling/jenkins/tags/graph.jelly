@@ -25,13 +25,14 @@
 	</st:documentation>
 	<div id="${attrs.id}" style="width: ${attrs.width};height: ${attrs.height};">
 		<script type="text/javascript" language="javascript">
-			$$(document).ready(function () {
-				var plot1 = $$.jqplot('${attrs.id}', ${attrs.data}, {
+			jQuery.noConflict();
+			jQuery(document).ready(function () {
+				var plot1 = jQuery.jqplot('${attrs.id}', ${attrs.data}, {
 					title:"${attrs.title}",
 					series: ${attrs.seriesNames},
 					axes:{
 						xaxis:{
-							renderer:$$.jqplot.CategoryAxisRenderer,
+							renderer:jQuery.jqplot.CategoryAxisRenderer,
 							rendererOptions:{sortMergedLabels:true, tickOptions:{
 								formatString:'#%d'
 							}},
