@@ -1,5 +1,30 @@
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" >
 	<f:entry>
-		<f:checkbox field="enabled" default="true" value="${instance.enabled}" title="${%Enabled}"/>
-	</f:entry>
+        <f:checkbox field="enabled" default="true" value="${instance.enabled}" title="${%Enabled}"/>
+    </f:entry>
+
+    <f:section title="${%Limits}">
+        <f:entry>
+            <f:repeatable var="limit" name="limits" items="${instance.simulationLimits}" header="${%Limit}">
+                <table width="100%">
+                    <f:entry title="${%Simulation}" field="simulationName">
+                        <f:textbox value="${limit.simulationName}" default="" />
+                    </f:entry>
+                    <f:entry title="${%LimitsMaxFailed}" field="maxFailed">
+                        <f:number value="${limit.maxFailed}" min="0" />
+                    </f:entry>
+                    <f:entry title="${%LimitsMeanNumberOfRequestsPerSecond}" field="meanNumberOfRequestsPerSecond">
+                        <f:number value="${limit.meanNumberOfRequestsPerSecond}" min="0" />
+                    </f:entry>
+                    <f:entry title="${%LimitsMaxResponseTime}" field="maxResponseTime">
+                        <f:number value="${limit.maxResponseTime}" min="0" />
+                    </f:entry>
+                    <f:entry title="${%LimitsMeanResponseTime}" field="meanResponseTime">
+                        <f:number value="${limit.meanResponseTime}" min="0" />
+                    </f:entry>
+                </table>
+                <f:repeatableDeleteButton />
+            </f:repeatable>
+        </f:entry>
+    </f:section>
 </j:jelly>
