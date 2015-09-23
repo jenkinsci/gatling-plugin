@@ -21,94 +21,96 @@ import java.util.List;
 
 public class SimulationLimitsValidator {
 
-	private List<BuildSimulation> simulations;
-	private List<SimulationLimits> simulationLimits;
-	private PrintStream logger;
+    private List<BuildSimulation> simulations;
+    private List<SimulationLimits> simulationLimits;
+    private PrintStream logger;
 
-	public SimulationLimitsValidator(List<BuildSimulation> simulations, List<SimulationLimits> simulationLimits, PrintStream logger) {
-		this.simulations = simulations;
-		this.simulationLimits = simulationLimits;
-		this.logger = logger;
-	}
+    public SimulationLimitsValidator(List<BuildSimulation> simulations, List<SimulationLimits> simulationLimits,
+            PrintStream logger) {
+        this.simulations = simulations;
+        this.simulationLimits = simulationLimits;
+        this.logger = logger;
+    }
 
-	public boolean isValid() {
-		if (simulationLimits == null || simulationLimits.isEmpty()) {
-			return true;
-		}
+    public boolean isValid() {
+        if (simulationLimits == null || simulationLimits.isEmpty()) {
+            return true;
+        }
 
-		return validateSimutaionsLimits();
-	}
+        return validateSimutaionsLimits();
+    }
 
-	private boolean validateSimutaionsLimits() {
-		boolean result = true;
+    private boolean validateSimutaionsLimits() {
+        boolean result = true;
 
-		for (SimulationLimits limits : simulationLimits) {
-			BuildSimulation simulation = getSimulationForSimulationLimit(limits.getSimulationName());
+        for (SimulationLimits limits : simulationLimits) {
+            BuildSimulation simulation = getSimulationForSimulationLimit(limits.getSimulationName());
 
-			if (simulation != null) {
-				logger.println("Validation simulation limits for simultaion: " + simulation.getSimulationName());
+            if (simulation != null) {
+                logger.println("Validation simulation limits for simultaion: " + simulation.getSimulationName());
 
-				result = isSimulationValid(simulation, limits);
+                result = isSimulationValid(simulation, limits);
 
-				if (!result) {
-					logger.println("ERROR: Simulation limits failed for simulation: " + simulation.getSimulationName());
-					break;
-				}
-			} else {
-				logger.println("WARN: No simulation with name: " + limits.getSimulationName() + " found for declared limits");
-			}
-		}
+                if (!result) {
+                    logger.println("ERROR: Simulation limits failed for simulation: " + simulation.getSimulationName());
+                    break;
+                }
+            } else {
+                logger.println(
+                        "WARN: No simulation with name: " + limits.getSimulationName() + " found for declared limits");
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	private boolean isSimulationValid(BuildSimulation simulation, SimulationLimits limits) {
-		RequestReport requestReport = simulation.getRequestReport();
+    private boolean isSimulationValid(BuildSimulation simulation, SimulationLimits limits) {
+        RequestReport requestReport = simulation.getRequestReport();
 
-		return isFailedReqestsLimitValid(limits, requestReport) &&
-			isMaxRequestResponseTimeValid(limits, requestReport) &&
-			isMeanRequestsResponseTimeValid(limits, requestReport) &&
-			isMeanNumberOfReuestsPerSecondValid(limits, requestReport);
-	}
+        return isFailedReqestsLimitValid(limits, requestReport) && isMaxRequestResponseTimeValid(limits, requestReport)
+                && isMeanRequestsResponseTimeValid(limits, requestReport)
+                && isMeanNumberOfReuestsPerSecondValid(limits, requestReport);
+    }
 
-	private boolean isMeanNumberOfReuestsPerSecondValid(SimulationLimits limits, RequestReport requestReport) {
-		logger.println("Validating mean number of requests per second");
+    private boolean isMeanNumberOfReuestsPerSecondValid(SimulationLimits limits, RequestReport requestReport) {
+        logger.println("Validating mean number of requests per second");
 
-		return isInsideMinimumLimits(requestReport.getMeanNumberOfRequestsPerSecond().getTotal(), limits.getMeanNumberOfRequestsPerSecond());
-	}
+        return isInsideMinimumLimits(requestReport.getMeanNumberOfRequestsPerSecond().getTotal(),
+                limits.getMeanNumberOfRequestsPerSecond());
+    }
 
-	private boolean isMeanRequestsResponseTimeValid(SimulationLimits limits, RequestReport requestReport) {
-		logger.println("Validating mean request response times");
+    private boolean isMeanRequestsResponseTimeValid(SimulationLimits limits, RequestReport requestReport) {
+        logger.println("Validating mean request response times");
 
-		return isInsideMaximumLimits(requestReport.getMeanResponseTime().getTotal(), limits.getMeanResponseTime());
-	}
+        return isInsideMaximumLimits(requestReport.getMeanResponseTime().getTotal(), limits.getMeanResponseTime());
+    }
 
-	private boolean isMaxRequestResponseTimeValid(SimulationLimits limits, RequestReport requestReport) {
-		logger.println("Validating maximum requests response time");
+    private boolean isMaxRequestResponseTimeValid(SimulationLimits limits, RequestReport requestReport) {
+        logger.println("Validating maximum requests response time");
 
-		return isInsideMaximumLimits(requestReport.getMaxResponseTime().getTotal(), limits.getMaxResponseTime());
-	}
+        return isInsideMaximumLimits(requestReport.getMaxResponseTime().getTotal(), limits.getMaxResponseTime());
+    }
 
-	private boolean isFailedReqestsLimitValid(SimulationLimits limits, RequestReport requestReport) {
-		logger.println("Validating number of failed requests");
+    private boolean isFailedReqestsLimitValid(SimulationLimits limits, RequestReport requestReport) {
+        logger.println("Validating number of failed requests");
 
-		return isInsideMaximumLimits(requestReport.getNumberOfRequests().getKO(), limits.getMaxFailed());
-	}
+        return isInsideMaximumLimits(requestReport.getNumberOfRequests().getKO(), limits.getMaxFailed());
+    }
 
-	private boolean isInsideMaximumLimits(long original, Long limit) {
-		return isAbsent(limit) || original <= limit;
-	}
+    private boolean isInsideMaximumLimits(long original, Long limit) {
+        return isAbsent(limit) || original <= limit;
+    }
 
-	private boolean isInsideMinimumLimits(long original, Long limit) {
-		return isAbsent(limit) || original >= limit;
-	}
+    private boolean isInsideMinimumLimits(long original, Long limit) {
+        return isAbsent(limit) || original >= limit;
+    }
 
-	private boolean isAbsent(Long limit) {
-		return limit == null || limit <= 0;
-	}
+    private boolean isAbsent(Long limit) {
+        return limit == null || limit <= 0;
+    }
 
-	private BuildSimulation getSimulationForSimulationLimit(final String simulationName) {
-		if (simulations != null) {
+    private BuildSimulation getSimulationForSimulationLimit(final String simulationName) {
+        if (simulations != null) {
             for (Iterator<BuildSimulation> iter = simulations.iterator(); iter.hasNext();) {
                 BuildSimulation item = iter.next();
 
@@ -119,6 +121,6 @@ public class SimulationLimitsValidator {
         }
 
         return null;
-	}
+    }
 
 }

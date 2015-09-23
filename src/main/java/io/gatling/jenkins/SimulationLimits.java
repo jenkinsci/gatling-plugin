@@ -17,50 +17,50 @@ package io.gatling.jenkins;
 
 public class SimulationLimits {
 
-	private String simulationName;
-	private Long maxFailed;
-	private Long maxResponseTime;
-	private Long meanNumberOfRequestsPerSecond;
-	private Long meanResponseTime;
+    private String simulationName;
+    private Long maxFailed;
+    private Long maxResponseTime;
+    private Long meanNumberOfRequestsPerSecond;
+    private Long meanResponseTime;
 
-	public String getSimulationName() {
-		return simulationName;
-	}
+    public String getSimulationName() {
+        return simulationName;
+    }
 
-	public void setSimulationName(String simulationName) {
-		this.simulationName = simulationName;
-	}
+    public void setSimulationName(String simulationName) {
+        this.simulationName = simulationName;
+    }
 
-	public Long getMaxFailed() {
-		return maxFailed;
-	}
+    public Long getMaxFailed() {
+        return maxFailed;
+    }
 
-	public void setMaxFailed(Long maxFailed) {
-		this.maxFailed = maxFailed;
-	}
+    public void setMaxFailed(Long maxFailed) {
+        this.maxFailed = maxFailed;
+    }
 
-	public Long getMaxResponseTime() {
-		return maxResponseTime;
-	}
+    public Long getMaxResponseTime() {
+        return maxResponseTime;
+    }
 
-	public void setMaxResponseTime(Long maxResponseTime) {
-		this.maxResponseTime = maxResponseTime;
-	}
+    public void setMaxResponseTime(Long maxResponseTime) {
+        this.maxResponseTime = maxResponseTime;
+    }
 
-	public Long getMeanNumberOfRequestsPerSecond() {
-		return meanNumberOfRequestsPerSecond;
-	}
+    public Long getMeanNumberOfRequestsPerSecond() {
+        return meanNumberOfRequestsPerSecond;
+    }
 
-	public void setMeanNumberOfRequestsPerSecond(Long meanNumberOfRequestsPerSecond) {
-		this.meanNumberOfRequestsPerSecond = meanNumberOfRequestsPerSecond;
-	}
+    public void setMeanNumberOfRequestsPerSecond(Long meanNumberOfRequestsPerSecond) {
+        this.meanNumberOfRequestsPerSecond = meanNumberOfRequestsPerSecond;
+    }
 
-	public Long getMeanResponseTime() {
-		return meanResponseTime;
-	}
+    public Long getMeanResponseTime() {
+        return meanResponseTime;
+    }
 
-	public void setMeanResponseTime(Long meanResponseTime) {
-		this.meanResponseTime = meanResponseTime;
-	}
+    public void setMeanResponseTime(Long meanResponseTime) {
+        this.meanResponseTime = meanResponseTime;
+    }
 
 }
