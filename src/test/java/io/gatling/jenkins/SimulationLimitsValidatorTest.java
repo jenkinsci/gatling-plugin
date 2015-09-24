@@ -117,14 +117,7 @@ public class SimulationLimitsValidatorTest {
 
     private SimulationLimits createSimulationLimits(String simulationName, Long maxFailed, Long maxRespTime,
             Long meanRespTime, Long numberOfReqsPerSec) {
-        SimulationLimits simulationLimits = new SimulationLimits();
-        simulationLimits.setSimulationName(simulationName);
-        simulationLimits.setMaxFailed(maxFailed);
-        simulationLimits.setMaxResponseTime(maxRespTime);
-        simulationLimits.setMeanResponseTime(meanRespTime);
-        simulationLimits.setMeanNumberOfRequestsPerSecond(numberOfReqsPerSec);
-
-        return simulationLimits;
+        return new SimulationLimits(simulationName, maxFailed, maxRespTime, numberOfReqsPerSec, meanRespTime);
     }
 
 }

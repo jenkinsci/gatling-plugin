@@ -15,52 +15,43 @@
  */
 package io.gatling.jenkins;
 
+import org.kohsuke.stapler.DataBoundConstructor;
+
 public class SimulationLimits {
 
-    private String simulationName;
-    private Long maxFailed;
-    private Long maxResponseTime;
-    private Long meanNumberOfRequestsPerSecond;
-    private Long meanResponseTime;
+    private final String simulationName;
+    private final Long maxFailed;
+    private final Long maxResponseTime;
+    private final Long meanNumberOfRequestsPerSecond;
+    private final Long meanResponseTime;
+
+    @DataBoundConstructor
+    public SimulationLimits(String simulationName, Long maxFailed, Long maxResponseTime, Long meanNumberOfRequestsPerSecond, Long meanResponseTime) {
+        this.simulationName = simulationName;
+        this.maxFailed = maxFailed;
+        this.maxResponseTime = maxResponseTime;
+        this.meanNumberOfRequestsPerSecond = meanNumberOfRequestsPerSecond;
+        this.meanResponseTime = meanResponseTime;
+    }
 
     public String getSimulationName() {
         return simulationName;
-    }
-
-    public void setSimulationName(String simulationName) {
-        this.simulationName = simulationName;
     }
 
     public Long getMaxFailed() {
         return maxFailed;
     }
 
-    public void setMaxFailed(Long maxFailed) {
-        this.maxFailed = maxFailed;
-    }
-
     public Long getMaxResponseTime() {
         return maxResponseTime;
-    }
-
-    public void setMaxResponseTime(Long maxResponseTime) {
-        this.maxResponseTime = maxResponseTime;
     }
 
     public Long getMeanNumberOfRequestsPerSecond() {
         return meanNumberOfRequestsPerSecond;
     }
 
-    public void setMeanNumberOfRequestsPerSecond(Long meanNumberOfRequestsPerSecond) {
-        this.meanNumberOfRequestsPerSecond = meanNumberOfRequestsPerSecond;
-    }
-
     public Long getMeanResponseTime() {
         return meanResponseTime;
-    }
-
-    public void setMeanResponseTime(Long meanResponseTime) {
-        this.meanResponseTime = meanResponseTime;
     }
 
 }

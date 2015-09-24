@@ -5,22 +5,22 @@
 
     <f:section title="${%Limits}">
         <f:entry help="/plugin/gatling/help-limits.html">
-            <f:repeatable var="limit" name="limits" items="${instance.simulationLimits}" header="${%Limit}">
+            <f:repeatable var="limit" name="simulationLimits" items="${instance.simulationLimits}" header="${%Limit}">
                 <table width="100%">
                     <f:entry title="${%Simulation}" field="simulationName">
                         <f:textbox value="${limit.simulationName}" default="" />
                     </f:entry>
                     <f:entry title="${%LimitsMaxFailed}" field="maxFailed">
-                        <f:number value="${limit.maxFailed}" min="-1" />
+                        <f:number value="${limit.maxFailed}" min="-1" default ="-1" />
                     </f:entry>
                     <f:entry title="${%LimitsMeanNumberOfRequestsPerSecond}" field="meanNumberOfRequestsPerSecond">
-                        <f:number value="${limit.meanNumberOfRequestsPerSecond}" min="-1" />
+                        <f:number value="${limit.meanNumberOfRequestsPerSecond}" min="-1" default ="-1" />
                     </f:entry>
                     <f:entry title="${%LimitsMaxResponseTime}" field="maxResponseTime">
-                        <f:number value="${limit.maxResponseTime}" min="-1" />
+                        <f:number value="${limit.maxResponseTime}" min="-1" default ="-1" />
                     </f:entry>
                     <f:entry title="${%LimitsMeanResponseTime}" field="meanResponseTime">
-                        <f:number value="${limit.meanResponseTime}" min="-1" />
+                        <f:number value="${limit.meanResponseTime}" min="-1" default ="-1" />
                     </f:entry>
                 </table>
                 <f:repeatableDeleteButton />

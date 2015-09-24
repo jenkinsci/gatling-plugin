@@ -91,6 +91,10 @@ public class GatlingPublisher extends Recorder {
     return enabled;
   }
 
+  public List<SimulationLimits> getSimulationLimits() {
+    return simulationLimits;
+  }
+
   public BuildStepMonitor getRequiredMonitorService() {
     return BuildStepMonitor.BUILD;
   }
