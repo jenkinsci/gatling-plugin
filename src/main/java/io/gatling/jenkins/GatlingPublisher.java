@@ -50,7 +50,7 @@ public class GatlingPublisher extends Recorder {
   @DataBoundConstructor
   public GatlingPublisher(Boolean enabled, List<SimulationLimits> simulationLimits) {
     this.enabled = enabled;
-	this.simulationLimits = simulationLimits;
+    this.simulationLimits = simulationLimits;
   }
 
   @Override

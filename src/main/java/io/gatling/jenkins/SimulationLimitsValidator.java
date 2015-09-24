@@ -21,6 +21,7 @@ import java.util.List;
 
 public class SimulationLimitsValidator {
 
+    private static final int MINIMUM_LIMIT = 0;
     private List<BuildSimulation> simulations;
     private List<SimulationLimits> simulationLimits;
     private PrintStream logger;
@@ -106,11 +107,11 @@ public class SimulationLimitsValidator {
     }
 
     private boolean isAbsent(Long limit) {
-        return limit == null || limit <= 0;
+        return limit == null || limit < MINIMUM_LIMIT;
     }
 
     private BuildSimulation getSimulationForSimulationLimit(final String simulationName) {
-        if (simulations != null) {
+        if (simulations != null && simulationName != null && !simulationName.isEmpty()) {
             for (Iterator<BuildSimulation> iter = simulations.iterator(); iter.hasNext();) {
                 BuildSimulation item = iter.next();
 

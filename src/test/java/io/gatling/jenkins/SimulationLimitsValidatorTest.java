@@ -25,7 +25,7 @@ public class SimulationLimitsValidatorTest {
     @Test
     public void testValidScenario() {
         String simulationName = "simulation";
-        SimulationLimits simulationLimits = createSimulationLimits(simulationName, 25L, null, 0L, 3000L);
+        SimulationLimits simulationLimits = createSimulationLimits(simulationName, 25L, null, -1L, 3000L);
 
         Statistics meanNumberOfRequestsPerSecond = createStatistics(200, 10000);
         Statistics meanResponseTime = createStatistics(20, 100);
@@ -43,8 +43,8 @@ public class SimulationLimitsValidatorTest {
     @Test
     public void testValidScenario2() {
         String simulationName = "simulation";
-        SimulationLimits simulationLimits = createSimulationLimits(simulationName, 25L, null, 0L, 3000L);
-        SimulationLimits simulationLimits2 = createSimulationLimits("simulation2", 25L, null, 0L, 3000L);
+        SimulationLimits simulationLimits = createSimulationLimits(simulationName, 25L, null, -1L, 3000L);
+        SimulationLimits simulationLimits2 = createSimulationLimits("simulation2", 25L, null, -1L, 3000L);
 
         Statistics meanNumberOfRequestsPerSecond = createStatistics(200, 10000);
         Statistics meanResponseTime = createStatistics(20, 100);
