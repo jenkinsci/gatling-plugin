@@ -25,14 +25,14 @@
 	</st:documentation>
 	<div id="${attrs.id}" style="width: ${attrs.width};height: ${attrs.height};">
 		<script type="text/javascript" language="javascript">
-			jQuery.noConflict();
-			jQuery(document).ready(function () {
-				var plot1 = jQuery.jqplot('${attrs.id}', ${attrs.data}, {
+			jQueryGatling.noConflict();
+			jQueryGatling(document).ready(function () {
+				var plot1 = jQueryGatling.jqplot('${attrs.id}', ${attrs.data}, {
 					title:"${attrs.title}",
 					series: ${attrs.seriesNames},
 					axes:{
 						xaxis:{
-							renderer:jQuery.jqplot.CategoryAxisRenderer,
+							renderer:jQueryGatling.jqplot.CategoryAxisRenderer,
 							rendererOptions:{sortMergedLabels:true, tickOptions:{
 								formatString:'#%d'
 							}},
