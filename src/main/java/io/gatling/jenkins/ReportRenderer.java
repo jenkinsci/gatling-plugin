@@ -18,11 +18,20 @@ package io.gatling.jenkins;
 import hudson.model.Action;
 import hudson.model.DirectoryBrowserSupport;
 import org.kohsuke.stapler.ForwardToView;
+import org.kohsuke.stapler.HttpResponses;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 import javax.servlet.ServletException;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * This class is used by the {@link GatlingBuildAction} to handle the rendering
@@ -32,10 +41,18 @@ public class ReportRenderer {
 
   private Action action;
   private BuildSimulation simulation;
+  private final Set<File> safeDirectories;
 
   public ReportRenderer(Action gatlingBuildAction, BuildSimulation simulation) {
     this.action = gatlingBuildAction;
     this.simulation = simulation;
+
+    File rootDir = new File(simulation.getSimulationDirectory().getRemote());
+    this.safeDirectories = unmodifiableSet(new HashSet<>(asList(
+            rootDir,
+            new File(rootDir, "js"),
+            new File(rootDir, "style")
+    )));
   }
 
   /**
@@ -71,9 +88,25 @@ public class ReportRenderer {
    */
   public void doSource(StaplerRequest request, StaplerResponse response)
     throws IOException, ServletException {
-    DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(action,
-      simulation.getSimulationDirectory(),
-      simulation.getSimulationName(), null, false);
-    dbs.generateResponse(request, response, action);
+    String dir = simulation.getSimulationDirectory().getRemote();
+    String fileName = request.getRestOfPath();
+    if (fileName.isEmpty()) {
+      // serve the index page
+      throw HttpResponses.redirectTo("source/index.html");
+    }
+    if (fileName.startsWith("/")) {
+      fileName = fileName.substring(1);
+    }
+    File file = new File(dir, fileName);
+    if (fileName.endsWith(".html") || safeDirectories.contains(file.getParentFile())){
+      try (InputStream in = new FileInputStream(file)) {
+        response.serveFile(request, in, file.lastModified(), -1, file.length(), file.getName());
+      }
+    } else {
+      DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(action,
+              simulation.getSimulationDirectory(),
+              simulation.getSimulationName(), null, false);
+      dbs.generateResponse(request, response, action);
+    }
   }
 }
