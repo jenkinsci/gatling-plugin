@@ -96,12 +96,6 @@
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-cps</artifactId>
 			<version>1.14</version>
-			<exclusions> <!-- TODO: remove once updated to newer Jenkins baseline and Pipeline versions -->
-				<exclusion>
-					<groupId>org.jenkins-ci.ui</groupId>
-					<artifactId>jquery-detached</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
@@ -289,6 +283,23 @@
 				<configuration>
 					<hpiName>${project.build.finalName}-${project.version}</hpiName>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>display-info</id>
+						<configuration>
+							<rules>
+								<enforceBytecodeVersion>
+									<excludes combine.children="append">
+										<exclude>org.jenkins-ci.ui:jquery-detached</exclude>
+									</excludes>
+								</enforceBytecodeVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
