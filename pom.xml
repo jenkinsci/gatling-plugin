@@ -3,14 +3,14 @@
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>2.9</version>
+		<version>3.8</version>
 	</parent>
 
 	<artifactId>gatling</artifactId>
 	<version>1.2.3-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 	<name>Gatling Jenkins Plugin</name>
-	<url>https://wiki.jenkins-ci.org/display/JENKINS/Gatling+Plugin</url>
+	<url>https://wiki.jenkins.io/display/JENKINS/Gatling+Plugin</url>
 
 	<licenses>
 		<license>
@@ -54,15 +54,6 @@
 		<jenkins.version>1.651.2</jenkins.version>
 		<!-- Java Level to use. Java 7 required when using core >= 1.612 -->
 		<java.level>7</java.level>
-		<!-- Jenkins Test Harness version you use to test the plugin. -->
-		<!-- For Jenkins version >= 1.580.1 use JTH 2.x or higher. -->
-		<jenkins-test-harness.version>2.1</jenkins-test-harness.version>
-		<!-- Other properties you may want to use:
-             ~ hpi-plugin.version: The HPI Maven Plugin version used by the plugin..
-             ~ stapler-plugin.version: The Stapler Maven plugin version required by the plugin.
-        -->
-
-		<jackson.version>2.4.4</jackson.version>
 
 		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
 		<maven-source-plugin.version>2.2</maven-source-plugin.version>
@@ -76,14 +67,14 @@
 	<repositories>
 		<repository>
 			<id>repo.jenkins-ci.org</id>
-			<url>http://repo.jenkins-ci.org/public/</url>
+			<url>https://repo.jenkins-ci.org/public/</url>
 		</repository>
 	</repositories>
 
 	<pluginRepositories>
 		<pluginRepository>
 			<id>repo.jenkins-ci.org</id>
-			<url>http://repo.jenkins-ci.org/public/</url>
+			<url>https://repo.jenkins-ci.org/public/</url>
 		</pluginRepository>
 	</pluginRepositories>
 
@@ -109,6 +100,12 @@
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-step-api</artifactId>
 			<version>1.14</version>
+		</dependency>
+		<!-- Required due to JENKINS-51013 in plugin compat tester -->
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>script-security</artifactId>
+			<version>1.18.1</version>
 		</dependency>
 
 		<!-- writeFile is useful for test -->
