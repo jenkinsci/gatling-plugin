@@ -109,7 +109,7 @@
 			<version>1.18.1</version>
 		</dependency>
 
-		<!-- writeFile is useful for test -->
+		<!-- writeFile and sleep are useful for test -->
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-basic-steps</artifactId>

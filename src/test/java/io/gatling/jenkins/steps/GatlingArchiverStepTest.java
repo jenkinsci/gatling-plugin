@@ -55,6 +55,7 @@ public class GatlingArchiverStepTest extends Assert {
         WorkflowJob foo = j.jenkins.createProject(WorkflowJob.class, "foo");
         foo.setDefinition(new CpsFlowDefinition(StringUtils.join(Arrays.asList(
                 "node {",
+                "  sleep 1", // JENKINS-51015
                 "  writeFile file: 'results/foo-1234/js/global_stats.json', text: '{}'",
                 "  writeFile file: 'results/bar-5678/js/global_stats.json', text: '{}'",
                 "  gatlingArchive()",
@@ -75,7 +76,7 @@ public class GatlingArchiverStepTest extends Assert {
 
         foo.setAssignedNode(onlineSlave);
         foo.getBuildersList().add(new Shell("\n" +
-                "sleep 1 \n" + // Otherwise GatlingPublisher skips that because BuildStart time has second-accuracy
+                "sleep 1 \n" + // Otherwise GatlingPublisher skips that because BuildStart time has second-accuracy (JENKINS-51015)
                 "mkdir -p results/foo-1234/js/\n" +
                 "echo '{}' > results/foo-1234/js/global_stats.json\n" +
                 "mkdir -p results/bar-5678/js/\n" +
