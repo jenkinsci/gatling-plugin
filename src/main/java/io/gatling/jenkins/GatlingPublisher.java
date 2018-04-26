@@ -40,9 +40,6 @@ import java.util.List;
 public class GatlingPublisher extends Recorder implements SimpleBuildStep {
 
   private final Boolean enabled;
-  private Run<?, ?> run;
-  private PrintStream logger;
-
 
   @DataBoundConstructor
   public GatlingPublisher(Boolean enabled) {
@@ -52,8 +49,7 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
 
   @Override
   public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-    this.run = build;
-    logger = listener.getLogger();
+    PrintStream logger = listener.getLogger();
     if (enabled == null) {
       logger.println("Cannot check Gatling simulation tracking status, reports won't be archived.");
       logger.println("Please make sure simulation tracking is enabled in your build configuration !");
@@ -67,7 +63,7 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
     logger.println("Archiving Gatling reports...");
     FilePath workspace = build.getWorkspace();
     if (workspace != null) {
-      List<BuildSimulation> sims = saveFullReports(workspace, build.getRootDir());
+      List<BuildSimulation> sims = saveFullReports(build, workspace, build.getRootDir(), logger);
       if (sims.isEmpty()) {
         logger.println("No newer Gatling reports to archive.");
         return true;
@@ -84,9 +80,9 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
   }
 
   @Override
-  public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath workspace, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
-    this.run = run;
-    logger = listener.getLogger();
+  public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath workspace, @Nonnull Launcher launcher, @Nonnull TaskListener listener)
+          throws InterruptedException, IOException {
+    PrintStream logger = listener.getLogger();
     if (enabled == null) {
       logger.println("Cannot check Gatling simulation tracking status, reports won't be archived.");
       logger.println("Please make sure simulation tracking is enabled in your build configuration !");
@@ -99,7 +95,7 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
 
     logger.println("Archiving Gatling reports...");
 
-    List<BuildSimulation> sims = saveFullReports(workspace, run.getRootDir());
+    List<BuildSimulation> sims = saveFullReports(run, workspace, run.getRootDir(), logger);
     if (sims.isEmpty()) {
       logger.println("No newer Gatling reports to archive.");
       return;
@@ -118,7 +114,8 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
     return BuildStepMonitor.BUILD;
   }
 
-  private List<BuildSimulation> saveFullReports(FilePath workspace, File rootDir) throws IOException, InterruptedException {
+  private List<BuildSimulation> saveFullReports(@Nonnull Run<?,?> run, @Nonnull FilePath workspace, @Nonnull File rootDir, @Nonnull PrintStream logger)
+          throws IOException, InterruptedException {
     FilePath[] files = workspace.list("**/global_stats.json");
     List<FilePath> reportFolders = new ArrayList<FilePath>();
 
@@ -132,7 +129,7 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
       reportFolders.add(file.getParent().getParent());
     }
 
-    List<FilePath> reportsToArchive = selectReports(reportFolders);
+    List<FilePath> reportsToArchive = selectReports(run, reportFolders, logger);
 
 
     // If the most recent report has already been archived, there's nothing else to do
@@ -177,7 +174,9 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
     return simsToArchive;
   }
 
-  private List<FilePath> selectReports(List<FilePath> reportFolders) throws InterruptedException, IOException {
+  @Nonnull
+  private static List<FilePath> selectReports(@Nonnull Run<?, ?> run, @Nonnull List<FilePath> reportFolders,
+                                              @Nonnull PrintStream logger) throws InterruptedException, IOException {
     long buildStartTime = run.getStartTimeInMillis();
     List<FilePath> reportsFromThisBuild = new ArrayList<FilePath>();
     for (FilePath reportFolder : reportFolders) {
