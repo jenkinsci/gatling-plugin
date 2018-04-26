@@ -62,7 +62,7 @@ public class GatlingArchiverStepTest extends Assert {
 
         // get the build going, and wait until workflow pauses
         WorkflowRun b = j.assertBuildStatusSuccess(foo.scheduleBuild2(0).get());
-        verifyResult(b, null);
+        verifyResult(b);
     }
 
     @Test
@@ -85,15 +85,13 @@ public class GatlingArchiverStepTest extends Assert {
 
         // Build and assert status
         FreeStyleBuild freeStyleBuild = j.buildAndAssertSuccess(foo);
-        verifyResult(freeStyleBuild, freeStyleBuild.getWorkspace());
+        verifyResult(freeStyleBuild);
 
         // Triggers JEP-200 if PrintStream is still persisted
         foo.save();
     }
 
-    private void verifyResult(Run b, @CheckForNull FilePath workspace) {
-        // Runs in assumption that agent is actually local
-        //File baseDir = workspace != null ? new File(workspace.getRemote()) : b.getRootDir();
+    private void verifyResult(Run b) {
         File baseDir = b.getRootDir();
         File fooArchiveDir = new File(baseDir, "simulations/foo-1234");
         assertTrue("foo archive dir doesn't exist: " + fooArchiveDir,
