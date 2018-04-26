@@ -96,6 +96,12 @@
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
 			<artifactId>workflow-cps</artifactId>
 			<version>1.14</version>
+			<exclusions> <!-- TODO: remove once updated to newer Jenkins baseline and Pipeline versions -->
+				<exclusion>
+					<groupId>org.jenkins-ci.ui</groupId>
+					<artifactId>jquery-detached</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jenkins-ci.plugins.workflow</groupId>
