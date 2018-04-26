@@ -15,18 +15,29 @@
  */
 package io.gatling.jenkins.steps;
 
+import hudson.FilePath;
+import hudson.Launcher;
 import hudson.model.Action;
+import hudson.model.FreeStyleBuild;
+import hudson.model.FreeStyleProject;
+import hudson.model.Run;
+import hudson.slaves.DumbSlave;
+import hudson.tasks.Shell;
 import io.gatling.jenkins.GatlingBuildAction;
+import io.gatling.jenkins.GatlingPublisher;
 import jenkins.util.VirtualFile;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
+import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
 
+import javax.annotation.CheckForNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,11 +62,43 @@ public class GatlingArchiverStepTest extends Assert {
 
         // get the build going, and wait until workflow pauses
         WorkflowRun b = j.assertBuildStatusSuccess(foo.scheduleBuild2(0).get());
+        verifyResult(b, null);
+    }
 
-        File fooArchiveDir = new File(b.getRootDir(), "simulations/foo-1234");
+    @Test
+    @Issue("JENKINS-50977")
+    public void archiveInFreestyle() throws Exception {
+        Assume.assumeFalse("The test is Unix-only",
+                hudson.remoting.Launcher.isWindows());
+        FreeStyleProject foo = j.createFreeStyleProject();
+        DumbSlave onlineSlave = j.createOnlineSlave();
+
+        foo.setAssignedNode(onlineSlave);
+        foo.getBuildersList().add(new Shell("\n" +
+                "sleep 1 \n" + // Otherwise GatlingPublisher skips that because BuildStart time has second-accuracy
+                "mkdir -p results/foo-1234/js/\n" +
+                "echo '{}' > results/foo-1234/js/global_stats.json\n" +
+                "mkdir -p results/bar-5678/js/\n" +
+                "echo '{}' > results/bar-5678/js/global_stats.json\n"
+        ));
+        foo.getPublishersList().add(new GatlingPublisher(true));
+
+        // Build and assert status
+        FreeStyleBuild freeStyleBuild = j.buildAndAssertSuccess(foo);
+        verifyResult(freeStyleBuild, freeStyleBuild.getWorkspace());
+
+        // Triggers JEP-200 if PrintStream is still persisted
+        foo.save();
+    }
+
+    private void verifyResult(Run b, @CheckForNull FilePath workspace) {
+        // Runs in assumption that agent is actually local
+        //File baseDir = workspace != null ? new File(workspace.getRemote()) : b.getRootDir();
+        File baseDir = b.getRootDir();
+        File fooArchiveDir = new File(baseDir, "simulations/foo-1234");
         assertTrue("foo archive dir doesn't exist: " + fooArchiveDir,
                 fooArchiveDir.isDirectory());
-        File barArchiveDir = new File(b.getRootDir(), "simulations/bar-5678");
+        File barArchiveDir = new File(baseDir, "simulations/bar-5678");
         assertTrue("bar archive dir doesn't exist: " + barArchiveDir,
                 barArchiveDir.isDirectory());
 
