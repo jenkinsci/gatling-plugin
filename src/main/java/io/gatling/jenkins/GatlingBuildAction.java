@@ -71,25 +71,25 @@ public class GatlingBuildAction implements Action, SimpleBuildStep.LastBuildActi
 
   /**
    * This method is called dynamically for any HTTP request to our plugin's
-   * URL followed by "/report/SomeSimulationName".
+   * URL followed by "/report/reportName".
    *
    * It returns a new instance of {@link ReportRenderer}, which contains the
    * actual logic for rendering a report.
    *
-   * @param simulationName the name of the simulation
+   * @param reportName the name of the reportName
    */
-  public ReportRenderer getReport(String simulationName) {
-    return new ReportRenderer(this, getSimulation(simulationName));
+  public ReportRenderer getReport(String reportName) {
+    return new ReportRenderer(this, getSimulationByReportName(reportName));
   }
 
-  public String getReportURL(String simulationName) {
-    return new StringBuilder().append(URL_NAME).append("/report/").append(simulationName).toString();
+  public String getReportURL(BuildSimulation simulation) {
+    return new StringBuilder().append(URL_NAME).append("/report/").append(simulation.getSimulationDirectory().getName()).toString();
   }
 
-  private BuildSimulation getSimulation(String simulationName) {
+  private BuildSimulation getSimulationByReportName(String reportName) {
     // this isn't the most efficient implementation in the world :)
     for (BuildSimulation sim : this.getSimulations()) {
-      if (sim.getSimulationName().equals(simulationName)) {
+      if (sim.getSimulationDirectory().getName().equals(reportName)) {
         return sim;
       }
     }

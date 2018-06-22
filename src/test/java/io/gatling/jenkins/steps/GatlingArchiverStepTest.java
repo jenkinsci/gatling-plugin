@@ -15,8 +15,6 @@
  */
 package io.gatling.jenkins.steps;
 
-import hudson.FilePath;
-import hudson.Launcher;
 import hudson.model.Action;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
@@ -25,7 +23,6 @@ import hudson.slaves.DumbSlave;
 import hudson.tasks.Shell;
 import io.gatling.jenkins.GatlingBuildAction;
 import io.gatling.jenkins.GatlingPublisher;
-import jenkins.util.VirtualFile;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
@@ -37,14 +34,14 @@ import org.junit.Test;
 import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
 
-import javax.annotation.CheckForNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class GatlingArchiverStepTest extends Assert {
-    @Rule public JenkinsRule j = new JenkinsRule();
+    @Rule
+    public JenkinsRule j = new JenkinsRule();
 
     /**
      * Test archiving of gatling reports
@@ -57,6 +54,7 @@ public class GatlingArchiverStepTest extends Assert {
                 "node {",
                 "  sleep 1", // JENKINS-51015
                 "  writeFile file: 'results/foo-1234/js/global_stats.json', text: '{}'",
+                "  writeFile file: 'results/foo-4321/js/global_stats.json', text: '{}'",
                 "  writeFile file: 'results/bar-5678/js/global_stats.json', text: '{}'",
                 "  gatlingArchive()",
                 "}"), "\n")));
@@ -79,6 +77,8 @@ public class GatlingArchiverStepTest extends Assert {
                 "sleep 1 \n" + // Otherwise GatlingPublisher skips that because BuildStart time has second-accuracy (JENKINS-51015)
                 "mkdir -p results/foo-1234/js/\n" +
                 "echo '{}' > results/foo-1234/js/global_stats.json\n" +
+                "mkdir -p results/foo-4321/js/\n" +
+                "echo '{}' > results/foo-4321/js/global_stats.json\n" +
                 "mkdir -p results/bar-5678/js/\n" +
                 "echo '{}' > results/bar-5678/js/global_stats.json\n"
         ));
@@ -95,11 +95,13 @@ public class GatlingArchiverStepTest extends Assert {
     private void verifyResult(Run b) {
         File baseDir = b.getRootDir();
         File fooArchiveDir = new File(baseDir, "simulations/foo-1234");
-        assertTrue("foo archive dir doesn't exist: " + fooArchiveDir,
-                fooArchiveDir.isDirectory());
+        assertTrue("foo archive dir doesn't exist: " + fooArchiveDir, fooArchiveDir.isDirectory());
+
+        File foo2ArchiveDir = new File(baseDir, "simulations/foo-4321");
+        assertTrue("foo archive dir doesn't exist: " + foo2ArchiveDir, foo2ArchiveDir.isDirectory());
+
         File barArchiveDir = new File(baseDir, "simulations/bar-5678");
-        assertTrue("bar archive dir doesn't exist: " + barArchiveDir,
-                barArchiveDir.isDirectory());
+        assertTrue("bar archive dir doesn't exist: " + barArchiveDir, barArchiveDir.isDirectory());
 
         List<GatlingBuildAction> gbas = new ArrayList<>();
         for (Action a : b.getAllActions()) {
@@ -107,12 +109,10 @@ public class GatlingArchiverStepTest extends Assert {
                 gbas.add((GatlingBuildAction) a);
             }
         }
-        assertEquals("Should be exactly one GatlingBuildAction",
-                1, gbas.size());
+        assertEquals("Should be exactly one GatlingBuildAction", 1, gbas.size());
 
         GatlingBuildAction buildAction = gbas.get(0);
-        assertEquals("BuildAction should have exactly one ProjectAction",
-                1, buildAction.getProjectActions().size());
+        assertEquals("BuildAction should have exactly one ProjectAction", 1, buildAction.getProjectActions().size());
     }
 }
 
