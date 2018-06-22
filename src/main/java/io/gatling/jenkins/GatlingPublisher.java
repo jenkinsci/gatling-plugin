@@ -150,8 +150,6 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
 
     for (FilePath reportToArchive : reportsToArchive) {
       String name = reportToArchive.getName();
-      int dashIndex = name.lastIndexOf('-');
-      String simulation = name.substring(0, dashIndex);
       File simulationDirectory = new File(allSimulationsDirectory, name);
       boolean mkdirResult = simulationDirectory.mkdir();
       if (! mkdirResult) {
@@ -163,9 +161,9 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
 
       reportToArchive.copyRecursiveTo(reportDirectory);
 
-      SimulationReport report = new SimulationReport(reportDirectory, simulation);
+      SimulationReport report = new SimulationReport(reportDirectory, name);
       report.readStatsFile();
-      BuildSimulation sim = new BuildSimulation(simulation, report.getGlobalReport(), reportDirectory);
+      BuildSimulation sim = new BuildSimulation(name, report.getGlobalReport(), reportDirectory);
 
       simsToArchive.add(sim);
     }
