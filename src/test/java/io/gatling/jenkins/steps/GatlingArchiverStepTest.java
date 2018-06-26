@@ -32,6 +32,7 @@ import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.Issue;
+import org.jvnet.hudson.test.JenkinsRule;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ import java.util.List;
 
 public class GatlingArchiverStepTest extends Assert {
     @Rule
-    public JenkinsRule2 j = new JenkinsRule2();
+    public JenkinsRule j = new JenkinsRule();
 
     /**
      * Test archiving of gatling reports
