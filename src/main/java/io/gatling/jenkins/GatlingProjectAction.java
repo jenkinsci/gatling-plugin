@@ -104,7 +104,7 @@ public class GatlingProjectAction implements Action {
       if (action != null) {
         List<String> simNames = new ArrayList<String>();
         for (BuildSimulation sim : action.getSimulations()) {
-          simNames.add(sim.getSimulationName());
+          simNames.add(sim.getSimulationDirectory().getName());
         }
         reports.put(build, simNames);
       }
