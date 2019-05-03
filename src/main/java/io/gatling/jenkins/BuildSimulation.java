@@ -16,6 +16,7 @@
 package io.gatling.jenkins;
 
 import hudson.FilePath;
+import java.io.File;
 
 /**
  * This class is basically just a struct to hold information about one
@@ -25,12 +26,22 @@ import hudson.FilePath;
 public class BuildSimulation {
   private final String simulationName;
   private final RequestReport requestReport;
-  private final FilePath simulationDirectory;
+  @Deprecated
+  private transient FilePath simulationDirectory;
+  // TODO better to save, for example, a relative path from Run.rootDir
+  private File simulationPath;
 
-  public BuildSimulation(String simulationName, RequestReport requestReport, FilePath simulationDirectory) {
+  public BuildSimulation(String simulationName, RequestReport requestReport, File simulationPath) {
     this.simulationName = simulationName;
     this.requestReport = requestReport;
-    this.simulationDirectory = simulationDirectory;
+    this.simulationPath = simulationPath;
+  }
+
+  private Object readResolve() {
+    if (simulationDirectory != null) {
+        simulationPath = new File(simulationDirectory.getRemote());
+    }
+    return this;
   }
 
   public String getSimulationName() {
@@ -41,7 +52,7 @@ public class BuildSimulation {
     return requestReport;
   }
 
-  public FilePath getSimulationDirectory() {
-    return simulationDirectory;
+  public File getSimulationDirectory() {
+    return simulationPath;
   }
 }

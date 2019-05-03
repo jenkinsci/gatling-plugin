@@ -165,7 +165,7 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
 
       SimulationReport report = new SimulationReport(reportDirectory, simulation);
       report.readStatsFile();
-      BuildSimulation sim = new BuildSimulation(simulation, report.getGlobalReport(), reportDirectory);
+      BuildSimulation sim = new BuildSimulation(simulation, report.getGlobalReport(), simulationDirectory);
 
       simsToArchive.add(sim);
     }

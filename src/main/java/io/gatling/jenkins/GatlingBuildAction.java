@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class GatlingBuildAction implements Action, SimpleBuildStep.LastBuildAction {
 
-  private final Run<?, ?> run;
+  private final Run<?, ?> run; // TODO make transient, implement RunAction2
   private final List<BuildSimulation> simulations;
 
   public GatlingBuildAction(Run<?, ?> run, List<BuildSimulation> sims) {

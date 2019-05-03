@@ -15,6 +15,7 @@
  */
 package io.gatling.jenkins;
 
+import hudson.FilePath;
 import hudson.model.Action;
 import hudson.model.DirectoryBrowserSupport;
 import org.kohsuke.stapler.ForwardToView;
@@ -47,7 +48,7 @@ public class ReportRenderer {
     this.action = gatlingBuildAction;
     this.simulation = simulation;
 
-    File rootDir = new File(simulation.getSimulationDirectory().getRemote());
+    File rootDir = simulation.getSimulationDirectory();
     this.safeDirectories = unmodifiableSet(new HashSet<>(asList(
             rootDir,
             new File(rootDir, "js"),
@@ -88,7 +89,7 @@ public class ReportRenderer {
    */
   public void doSource(StaplerRequest request, StaplerResponse response)
     throws IOException, ServletException {
-    String dir = simulation.getSimulationDirectory().getRemote();
+    File dir = simulation.getSimulationDirectory();
     String fileName = request.getRestOfPath();
     if (fileName.isEmpty()) {
       // serve the index page
@@ -104,7 +105,7 @@ public class ReportRenderer {
       }
     } else {
       DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(action,
-              simulation.getSimulationDirectory(),
+              new FilePath(simulation.getSimulationDirectory()),
               simulation.getSimulationName(), null, false);
       dbs.generateResponse(request, response, action);
     }

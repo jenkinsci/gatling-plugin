@@ -38,6 +38,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 
 public class GatlingArchiverStepTest extends Assert {
     @Rule
@@ -92,7 +93,7 @@ public class GatlingArchiverStepTest extends Assert {
         foo.save();
     }
 
-    private void verifyResult(Run b) {
+    private void verifyResult(Run b) throws Exception {
         File baseDir = b.getRootDir();
         File fooArchiveDir = new File(baseDir, "simulations/foo-1234");
         assertTrue("foo archive dir doesn't exist: " + fooArchiveDir, fooArchiveDir.isDirectory());
@@ -113,6 +114,9 @@ public class GatlingArchiverStepTest extends Assert {
 
         GatlingBuildAction buildAction = gbas.get(0);
         assertEquals("BuildAction should have exactly one ProjectAction", 1, buildAction.getProjectActions().size());
+
+        // TODO JENKINS-57244 use RestartableJenkinsRule to verify that the action was actually saved successfully
+        FileUtils.copyFile(new File(b.getRootDir(), "build.xml"), System.out);
     }
 }
 
