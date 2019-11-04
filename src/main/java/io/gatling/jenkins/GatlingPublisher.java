@@ -69,13 +69,23 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
         return true;
       }
 
-      GatlingBuildAction action = new GatlingBuildAction(build, sims);
+      addOrUpdateBuildAction(build, sims);
 
-      build.addAction(action);
       return true;
     } else {
       logger.println("Failed to access workspace, it may be on a non-connected slave.");
       return false;
+    }
+  }
+
+  private void addOrUpdateBuildAction(@Nonnull Run<?, ?> run, List<BuildSimulation> simulations) {
+    GatlingBuildAction action = run.getAction(GatlingBuildAction.class);
+
+    if (action != null) {
+      action.getSimulations().addAll(simulations);
+    } else {
+      action = new GatlingBuildAction(run, simulations);
+      run.addAction(action);
     }
   }
 
@@ -101,9 +111,7 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
       return;
     }
 
-    GatlingBuildAction action = new GatlingBuildAction(run, sims);
-
-    run.addAction(action);
+    addOrUpdateBuildAction(run, sims);
   }
 
   public boolean isEnabled() {
