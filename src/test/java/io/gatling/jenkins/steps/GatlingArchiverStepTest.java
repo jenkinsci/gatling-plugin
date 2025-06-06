@@ -13,11 +13,18 @@
  */
 package io.gatling.jenkins.steps;
 
+import hudson.model.Action;
+import hudson.model.FreeStyleBuild;
+import hudson.model.FreeStyleProject;
+import hudson.model.Run;
+import hudson.slaves.DumbSlave;
+import hudson.tasks.Shell;
+import io.gatling.jenkins.GatlingBuildAction;
+import io.gatling.jenkins.GatlingPublisher;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
@@ -29,15 +36,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
-
-import hudson.model.Action;
-import hudson.model.FreeStyleBuild;
-import hudson.model.FreeStyleProject;
-import hudson.model.Run;
-import hudson.slaves.DumbSlave;
-import hudson.tasks.Shell;
-import io.gatling.jenkins.GatlingBuildAction;
-import io.gatling.jenkins.GatlingPublisher;
 
 public class GatlingArchiverStepTest extends Assert {
   @Rule public JenkinsRule j = new JenkinsRule();

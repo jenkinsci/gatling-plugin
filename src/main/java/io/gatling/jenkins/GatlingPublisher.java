@@ -13,17 +13,6 @@
  */
 package io.gatling.jenkins;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.FilePath;
@@ -35,7 +24,15 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.Nonnull;
 import jenkins.tasks.SimpleBuildStep;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 public class GatlingPublisher extends Recorder implements SimpleBuildStep {
 
@@ -111,7 +108,6 @@ public class GatlingPublisher extends Recorder implements SimpleBuildStep {
     return BuildStepMonitor.BUILD;
   }
 
-  @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   private List<BuildSimulation> saveFullReports(
       @Nonnull Run<?, ?> run,
       @Nonnull FilePath workspace,

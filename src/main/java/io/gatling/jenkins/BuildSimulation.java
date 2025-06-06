@@ -13,9 +13,8 @@
  */
 package io.gatling.jenkins;
 
-import java.io.File;
-
 import hudson.FilePath;
+import java.io.File;
 
 /**
  * This class is basically just a struct to hold information about one or more gatling simulations

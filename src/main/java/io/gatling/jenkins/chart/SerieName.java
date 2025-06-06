@@ -13,13 +13,12 @@
  */
 package io.gatling.jenkins.chart;
 
-import java.io.IOException;
-import java.util.Objects;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializable;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+import java.io.IOException;
+import java.util.Objects;
 
 public class SerieName implements JsonSerializable, Comparable<SerieName> {
   private final String name;

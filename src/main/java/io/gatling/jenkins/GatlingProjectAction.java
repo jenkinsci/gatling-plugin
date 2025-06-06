@@ -15,13 +15,12 @@ package io.gatling.jenkins;
 
 import static io.gatling.jenkins.PluginConstants.*;
 
+import hudson.model.*;
+import io.gatling.jenkins.chart.Graph;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import hudson.model.*;
-import io.gatling.jenkins.chart.Graph;
 
 public class GatlingProjectAction implements Action {
 

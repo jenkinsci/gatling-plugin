@@ -13,12 +13,11 @@
  */
 package io.gatling.jenkins;
 
+import hudson.FilePath;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import hudson.FilePath;
 
 public final class ZipSimulationUtil {
   private static final Logger LOGGER = Logger.getLogger(ZipSimulationUtil.class.getName());

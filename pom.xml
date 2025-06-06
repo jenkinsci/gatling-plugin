@@ -1,174 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.jenkins-ci.plugins</groupId>
-        <artifactId>plugin</artifactId>
-        <version>4.47</version>
-        <relativePath />
-    </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.jenkins-ci.plugins</groupId>
+    <artifactId>plugin</artifactId>
+    <version>4.75</version>
+    <relativePath />
+  </parent>
 
-	<artifactId>gatling</artifactId>
-	<version>${changelist}</version>
-	<packaging>hpi</packaging>
-	<name>Gatling Jenkins Plugin</name>
-	<url>https://github.com/jenkinsci/gatling-plugin</url>
+  <artifactId>gatling</artifactId>
+  <version>${changelist}</version>
+  <packaging>hpi</packaging>
+  <name>Gatling Jenkins Plugin</name>
+  <url>https://github.com/jenkinsci/gatling-plugin</url>
 
-	<licenses>
-		<license>
-			<name>Apache 2</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
-	<scm>
-		<connection>scm:git:git@github.com:${gitHubRepo}.git</connection>
-		<developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
-		<url>https://github.com/${gitHubRepo}</url>
-		<tag>${scmTag}</tag>
-	</scm>
+  <developers>
+    <developer>
+      <id>slandelle</id>
+      <name>Stephane Landelle</name>
+      <email>slandelle@gatling.io</email>
+      <organization>GatlingCorp</organization>
+    </developer>
+    <developer>
+      <id>ccedric</id>
+      <name>Cédric Cousseran</name>
+    </developer>
+  </developers>
 
-	<developers>
-		<developer>
-			<id>slandelle</id>
-			<email>slandelle@gatling.io</email>
-			<name>Stephane Landelle</name>
-			<organization>GatlingCorp</organization>
-		</developer>
-		<developer>
-			<id>ccedric</id>
-			<name>Cédric Cousseran</name>
-		</developer>
-	</developers>
+  <scm>
+    <connection>scm:git:git@github.com:${gitHubRepo}.git</connection>
+    <developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
+    <tag>${scmTag}</tag>
+    <url>https://github.com/${gitHubRepo}</url>
+  </scm>
 
-	<properties>
+  <properties>
 
-		<gitHubRepo>jenkinsci/gatling-plugin</gitHubRepo>
-		<changelist>999999-SNAPSHOT</changelist>
+    <gitHubRepo>jenkinsci/gatling-plugin</gitHubRepo>
+    <changelist>999999-SNAPSHOT</changelist>
 
-		<!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
-		<jenkins.version>2.346.3</jenkins.version>
+    <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
+    <jenkins.version>2.401.3</jenkins.version>
 
-		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
-		<maven-source-plugin.version>2.2</maven-source-plugin.version>
-		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
-		<maven-release-plugin.version>2.5.1</maven-release-plugin.version>
-		<mycila-maven-license-plugin.version>1.10.b1</mycila-maven-license-plugin.version>
+    <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+    <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+    <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+    <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
+    <mycila-maven-license-plugin.version>1.10.b1</mycila-maven-license-plugin.version>
 
-		<header.basedir>${project.basedir}</header.basedir>
-	</properties>
+    <header.basedir>${project.basedir}</header.basedir>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.jenkins.tools.bom</groupId>
+        <artifactId>bom-2.401.x</artifactId>
+        <version>2745.vc7b_fe4c876fa_</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
 
-	<repositories>
-		<repository>
-			<id>repo.jenkins-ci.org</id>
-			<url>https://repo.jenkins-ci.org/public/</url>
-		</repository>
-	</repositories>
+    <!-- OWASP HTML Sanitizer -->
+    <dependency>
+      <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+      <artifactId>owasp-java-html-sanitizer</artifactId>
+      <version>20240325.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>jackson2-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-cps</artifactId>
+    </dependency>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>repo.jenkins-ci.org</id>
-			<url>https://repo.jenkins-ci.org/public/</url>
-		</pluginRepository>
-	</pluginRepositories>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>io.jenkins.tools.bom</groupId>
-				<artifactId>bom-2.346.x</artifactId>
-				<version>1607.va_c1576527071</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	<dependencies>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-			<artifactId>jackson2-api</artifactId>
-		</dependency>
+    <!-- dependencies on Jenkins Pipeline plugins -->
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-job</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-step-api</artifactId>
+    </dependency>
 
-		<!-- OWASP HTML Sanitizer -->
-		<dependency>
-			<groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
-			<artifactId>owasp-java-html-sanitizer</artifactId>
-			<version>20211018.2</version>
-		</dependency>
+    <!-- writeFile and sleep are useful for test -->
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-basic-steps</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
-		<!-- dependencies on Jenkins Pipeline plugins -->
-		<dependency>
-			<groupId>org.jenkins-ci.plugins.workflow</groupId>
-			<artifactId>workflow-job</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins.workflow</groupId>
-			<artifactId>workflow-cps</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jenkins-ci.plugins.workflow</groupId>
-			<artifactId>workflow-step-api</artifactId>
-		</dependency>
+  <repositories>
+    <repository>
+      <id>repo.jenkins-ci.org</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+    </repository>
+  </repositories>
 
-		<!-- writeFile and sleep are useful for test -->
-		<dependency>
-			<groupId>org.jenkins-ci.plugins.workflow</groupId>
-			<artifactId>workflow-basic-steps</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>repo.jenkins-ci.org</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
 
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>com.diffplug.spotless</groupId>
-					<artifactId>spotless-maven-plugin</artifactId>
-					<version>2.44.5</version>
-					<configuration>
-						<java>
-							<googleJavaFormat>
-								<version>1.27.0</version>
-								<style>GOOGLE</style>
-							</googleJavaFormat>
-							<removeUnusedImports/>
-							<importOrder>
-								<order>java,javax,org,com,</order>
-							</importOrder>
-						</java>
-					</configuration>
-					<executions>
-						<execution>
-							<goals>
-								<goal>check</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>com.mycila.maven-license-plugin</groupId>
-					<artifactId>maven-license-plugin</artifactId>
-					<version>${mycila-maven-license-plugin.version}</version>
-					<configuration>
-						<header>${header.basedir}/src/etc/header.txt</header>
-						<strictCheck>false</strictCheck>
-						<excludes>
-							<exclude>**/*.properties</exclude>
-							<exclude>**/*.js</exclude>
-							<exclude>**/*.css</exclude>
-							<exclude>**/*.html</exclude>
-							<exclude>work/**</exclude>
-						</excludes>
-					</configuration>
-					<executions>
-						<execution>
-							<phase>process-sources</phase>
-							<goals>
-								<goal>format</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jenkins-ci.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <version>3.50</version>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.jenkins-ci.tools</groupId>
+          <artifactId>maven-hpi-plugin</artifactId>
+          <version>3.50</version>
+        </plugin>
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>4.9.3.0</version>
+          <configuration>
+            <effort>Max</effort>
+            <threshold>Medium</threshold>
+            <maxHeap>2048</maxHeap>
+            <timeout>600000</timeout>
+            <failOnError>false</failOnError>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>2.43.0</version>
+          <configuration>
+            <java>
+              <googleJavaFormat>
+                <version>1.19.2</version>
+                <style>GOOGLE</style>
+              </googleJavaFormat>
+              <removeUnusedImports />
+              <importOrder>
+                <order>java,javax,org,com,</order>
+              </importOrder>
+            </java>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>com.mycila.maven-license-plugin</groupId>
+          <artifactId>maven-license-plugin</artifactId>
+          <version>${mycila-maven-license-plugin.version}</version>
+          <configuration>
+            <header>${header.basedir}/src/etc/header.txt</header>
+            <strictCheck>false</strictCheck>
+            <excludes>
+              <exclude>**/*.properties</exclude>
+              <exclude>**/*.js</exclude>
+              <exclude>**/*.css</exclude>
+              <exclude>**/*.html</exclude>
+              <exclude>work/**</exclude>
+            </excludes>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>format</goal>
+              </goals>
+              <phase>process-sources</phase>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>

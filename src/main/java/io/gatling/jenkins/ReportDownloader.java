@@ -13,18 +13,15 @@
  */
 package io.gatling.jenkins;
 
+import hudson.model.Action;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import javax.servlet.ServletException;
-
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-
-import hudson.model.Action;
 
 /** This class is used to download the zipped Reports file */
 public class ReportDownloader implements Action {

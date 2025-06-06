@@ -13,19 +13,17 @@
  */
 package io.gatling.jenkins.chart;
 
-import java.io.IOException;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import hudson.model.Job;
 import hudson.model.Run;
 import io.gatling.jenkins.BuildSimulation;
 import io.gatling.jenkins.GatlingBuildAction;
 import io.gatling.jenkins.RequestReport;
+import java.io.IOException;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class Graph<Y extends Number> {
   private static final Logger LOGGER = Logger.getLogger(Graph.class.getName());

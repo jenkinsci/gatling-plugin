@@ -13,13 +13,11 @@
  */
 package io.gatling.jenkins.steps;
 
+import hudson.Extension;
 import javax.annotation.Nonnull;
-
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
 import org.kohsuke.stapler.DataBoundConstructor;
-
-import hudson.Extension;
 
 /** Archiving for gatling reports. */
 public class GatlingArchiverStep extends AbstractStepImpl {

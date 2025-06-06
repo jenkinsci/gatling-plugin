@@ -1,5 +1,6 @@
 package io.gatling.jenkins;
 
+import hudson.model.Action;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -7,13 +8,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-
 import javax.servlet.ServletException;
-
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-
-import hudson.model.Action;
 
 public class ReportViewer implements Action {
   private final BuildSimulation simulation;

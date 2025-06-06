@@ -15,12 +15,11 @@ package io.gatling.jenkins;
 
 import static io.gatling.jenkins.PluginConstants.*;
 
+import hudson.model.Action;
+import hudson.model.Run;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import hudson.model.Action;
-import hudson.model.Run;
 import jenkins.tasks.SimpleBuildStep;
 
 /**

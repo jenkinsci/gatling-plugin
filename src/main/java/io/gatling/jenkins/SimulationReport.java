@@ -13,14 +13,12 @@
  */
 package io.gatling.jenkins;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hudson.FilePath;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import hudson.FilePath;
 
 public class SimulationReport {
 
