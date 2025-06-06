@@ -17,7 +17,9 @@ package io.gatling.jenkins;
 
 import static io.gatling.jenkins.PluginConstants.*;
 
-import hudson.model.*;
+import hudson.model.Action;
+import hudson.model.Job;
+import hudson.model.Run;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
